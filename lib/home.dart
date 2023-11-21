@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-import 'add.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -71,7 +69,7 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: () {
-              MaterialPageRoute(builder: (context) => const AddPage());
+              Navigator.pushNamed(context, '/add');
             },
             icon: const Icon(
               Icons.add_circle_outline,

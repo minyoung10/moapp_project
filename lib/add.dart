@@ -35,7 +35,7 @@ class _AddPageState extends State<AddPage> {
     // textRecognizer 초기화, 이때 script에 인식하고자하는 언어를 인자로 넘겨줌
     // ex) 영어는 script: TextRecognitionScript.latin, 한국어는 script: TextRecognitionScript.korean
     final textRecognizer =
-        GoogleMlKit.vision.textRecognizer(script: TextRecognitionScript.latin);
+        GoogleMlKit.vision.textRecognizer(script: TextRecognitionScript.korean);
 
     // 이미지의 텍스트 인식해서 recognizedText에 저장
     RecognizedText recognizedText =
@@ -60,15 +60,17 @@ class _AddPageState extends State<AddPage> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text("Camera Test")),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 30, width: double.infinity),
-            _buildPhotoArea(),
-            _buildRecognizedText(),
-            const SizedBox(height: 20),
-            _buildButton(),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 30, width: double.infinity),
+              _buildPhotoArea(),
+              _buildRecognizedText(),
+              const SizedBox(height: 20),
+              _buildButton(),
+            ],
+          ),
         ),
       ),
     );
