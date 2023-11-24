@@ -10,16 +10,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isRecent = true;
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NaverMap(
-        options: const NaverMapViewOptions(),
-        onMapReady: (controller) {
-          print("네이버 맵 로딩됨!");
-        },
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: NaverMap(
+          options: const NaverMapViewOptions(
+            mapType: NMapType.basic,
+          ), // 지도 옵션을 설정할 수 있습니다.
+          forceGesture: false, // 지도에 전달되는 제스처 이벤트의 우선순위를 가장 높게 설정할지 여부를 지정합니다.
+          onMapReady: (controller) {},
+          onMapTapped: (point, latLng) {},
+          onSymbolTapped: (symbol) {},
+          onCameraChange: (position, reason) {},
+          onCameraIdle: () {},
+          onSelectedIndoorChanged: (indoor) {},
+        ),
       ),
     );
   }
