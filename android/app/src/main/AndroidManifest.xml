@@ -18,6 +18,9 @@
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
+
+              android:name="com.naver.maps.map.CLIENT_ID"
+              android:value="ya78ueg5mq" 
               />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
