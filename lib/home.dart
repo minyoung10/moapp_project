@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/add');
+              Navigator.pushNamed(context, '/detail');
             },
             icon: const Icon(
               Icons.add_circle_outline,

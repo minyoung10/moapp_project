@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+import 'components/widget.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -12,106 +11,176 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  XFile? _image; //이미지를 담을 변수 선언
-  final ImagePicker picker = ImagePicker(); //ImagePicker 초기화
-  String scannedText = ""; // textRecognizer로 인식된 텍스트를 담을 String
-
-  //이미지를 가져오는 함수
-  Future getImage(ImageSource imageSource) async {
-    //pickedFile에 ImagePicker로 가져온 이미지가 담긴다.
-    final XFile? pickedFile = await picker.pickImage(source: imageSource);
-    if (pickedFile != null) {
-      setState(() {
-        _image = XFile(pickedFile.path); //가져온 이미지를 _image에 저장
-      });
-      getRecognizedText(_image!); // 이미지를 가져온 뒤 텍스트 인식 실행
-    }
-  }
-
-  void getRecognizedText(XFile image) async {
-    // XFile 이미지를 InputImage 이미지로 변환
-    final InputImage inputImage = InputImage.fromFilePath(image.path);
-
-    // textRecognizer 초기화, 이때 script에 인식하고자하는 언어를 인자로 넘겨줌
-    // ex) 영어는 script: TextRecognitionScript.latin, 한국어는 script: TextRecognitionScript.korean
-    final textRecognizer =
-        GoogleMlKit.vision.textRecognizer(script: TextRecognitionScript.korean);
-
-    // 이미지의 텍스트 인식해서 recognizedText에 저장
-    RecognizedText recognizedText =
-        await textRecognizer.processImage(inputImage);
-
-    // Release resources
-    await textRecognizer.close();
-
-    // 인식한 텍스트 정보를 scannedText에 저장
-    scannedText = "";
-    for (TextBlock block in recognizedText.blocks) {
-      for (TextLine line in block.lines) {
-        scannedText = "$scannedText${line.text}\n";
-      }
-    }
-
-    setState(() {});
-  }
-
+  double star = 3;
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text("Camera Test")),
-        body: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("카페 리뷰 작성"),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: Colors.black,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(25, 29, 25, 38),
+        child: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 30, width: double.infinity),
-              _buildPhotoArea(),
-              _buildRecognizedText(),
-              const SizedBox(height: 20),
-              _buildButton(),
+              const Text("카페 어떠셨나요?",
+                  style: TextStyle(
+                      color: Color(0xff2a201c),
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600)),
+              const SizedBox(height: 14),
+              RatingBar.builder(
+                initialRating: 3,
+                minRating: 0,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemSize: 60,
+                unratedColor: const Color.fromRGBO(230, 230, 230, 0.7),
+                itemBuilder: (context, _) => Icon(Icons.star_rate_rounded,
+                    color: Colors.yellow[600], size: 17),
+                onRatingUpdate: (rating) {
+                  setState(() {
+                    star = rating;
+                  });
+                },
+              ),
+              const SizedBox(height: 34),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("분위기",
+                      style: TextStyle(
+                          color: Color(0xff2a201c),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500)),
+                  SizedBox(height: 13),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      HashTag(context: "카공 하기 좋은", tappable: true),
+                      SizedBox(width: 12),
+                      HashTag(context: "뷰 맛집", tappable: true)
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      HashTag(context: "작업 하기 좋은", tappable: true),
+                      SizedBox(width: 12),
+                      HashTag(context: "이야기 나누기 좋은", tappable: true)
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 29),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("커피",
+                      style: TextStyle(
+                          color: Color(0xff2a201c),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500)),
+                  SizedBox(height: 13),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      HashTag(context: "낮은 산미", tappable: true),
+                      SizedBox(width: 10),
+                      HashTag(context: "중간 산미", tappable: true),
+                      SizedBox(width: 10),
+                      HashTag(context: "높은 산미", tappable: true),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      HashTag(context: "라이트 바디", tappable: true),
+                      SizedBox(width: 10),
+                      HashTag(context: "미디엄 바디", tappable: true),
+                      SizedBox(width: 10),
+                      HashTag(context: "풀 바디", tappable: true),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      HashTag(context: "라이트 로스터", tappable: true),
+                      SizedBox(width: 8),
+                      HashTag(context: "미디엄 로스터", tappable: true),
+                      SizedBox(width: 8),
+                      HashTag(context: "다크 로스터", tappable: true),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 28),
+              const Text("내용",
+                  style: TextStyle(
+                      color: Color(0xff2a201c),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500)),
+              const SizedBox(height: 13),
+              const SizedBox(width: 343, height: 91, child: TextField()),
+              const Spacer(),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 165,
+                    height: 54,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.black, width: 2),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12))),
+                      child: const Text(
+                        "취소",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 13),
+                  SizedBox(
+                    width: 165,
+                    height: 54,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff2a201c),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12))),
+                      child: const Text(
+                        "등록",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildPhotoArea() {
-    return _image != null
-        ? SizedBox(
-            width: 300,
-            height: 300,
-            child: Image.file(File(_image!.path)), //가져온 이미지를 화면에 띄워주는 코드
-          )
-        : Container(
-            width: 300,
-            height: 300,
-            color: Colors.grey,
-          );
-  }
-
-  Widget _buildRecognizedText() {
-    return Text(scannedText); //getRecognizedText()에서 얻은 scannedText 값 출력
-  }
-
-  Widget _buildButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            getImage(ImageSource.camera); //getImage 함수를 호출해서 카메라로 찍은 사진 가져오기
-          },
-          child: const Text("카메라"),
-        ),
-        const SizedBox(width: 30),
-        ElevatedButton(
-          onPressed: () {
-            getImage(ImageSource.gallery); //getImage 함수를 호출해서 갤러리에서 사진 가져오기
-          },
-          child: const Text("갤러리"),
-        ),
-      ],
     );
   }
 }
